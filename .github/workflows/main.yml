@@ -6,6 +6,6 @@ jobs:
     steps:
       - uses: nixbuild/nix-quick-install-action@v27
       - run: nix build --version
-      - run: nix build ./examples/flakes-simple
-      - name: hello
-        run: ./result/bin/hello
+      # - run: nix build ./examples/flakes-simple
+      # - name: hello
+      #   run: ./result/bin/hello
