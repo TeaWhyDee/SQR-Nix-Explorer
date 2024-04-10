@@ -1,0 +1,11 @@
+name: Examples
+on: push
+jobs:
+  minimal:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: nixbuild/nix-quick-install-action@v27
+      - run: nix build --version
+      - run: nix build ./examples/flakes-simple
+      - name: hello
+        run: ./result/bin/hello
