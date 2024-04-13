@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+import nix
 
 app = FastAPI()
 
@@ -10,17 +11,18 @@ app = FastAPI()
 # ===== USER =====
 @app.post("/register")
 def register(username: str, password: str):
-    return "Not Implemented"
+    # Add simple password validation
+    raise HTTPException(status_code=500, detail="Not implemented")
 
 
 @app.post("/login")
 def login(username: str, password: str):
-    return "Not Implemented"
+    raise HTTPException(status_code=500, detail="Not implemented")
 
 
 @app.post("/logout")
 def logout():
-    return "Not Implemented"
+    raise HTTPException(status_code=500, detail="Not implemented")
 
 
 # ===== STORES =====
@@ -28,8 +30,16 @@ def logout():
 def add_store(store_name: str):
     # Check for auth etc
 
+    # TODO: Check for exceptions from nix
+    # Probably call like this?
+    try:
+        nix.add_store(store_name)
+    except:
+        pass
+
     raise HTTPException(status_code=500, detail="Not implemented")
 
+    # Returns look similar to this:
     # return {"message": "Store registered successfully"}
     # raise HTTPException(status_code=401, detail="User not logged in")
 
@@ -52,7 +62,7 @@ def remove_package_from_store(store_name: str, package_name: str):
 @app.get("/store/check_package_exists")
 def check_package_exists(store_name: str, package_name: str):
 
-    return {"package_exists": True}
+    # return {"package_exists": True}
     raise HTTPException(status_code=500, detail="Not implemented")
 
 
