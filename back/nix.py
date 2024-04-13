@@ -23,7 +23,6 @@ def remove_package_from_store(store_name: str, package_name: str):
 
 
 def check_package_exists(store_name: str, package_name: str) -> bool:
-
     return False
     raise Exception()
 

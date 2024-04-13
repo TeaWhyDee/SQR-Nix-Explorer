@@ -34,7 +34,7 @@ def add_store(store_name: str):
     # Probably call like this?
     try:
         nix.add_store(store_name)
-    except:
+    except Exception:
         pass
 
     raise HTTPException(status_code=500, detail="Not implemented")
@@ -82,5 +82,5 @@ def run_dev_server():
     uvicorn.run("back.main:app", reload=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     run_dev_server()
