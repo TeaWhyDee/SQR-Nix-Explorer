@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-import nix
+from back import nix
 
 app = FastAPI()
 
@@ -61,7 +61,6 @@ def remove_package_from_store(store_name: str, package_name: str):
 
 @app.get("/store/check_package_exists")
 def check_package_exists(store_name: str, package_name: str):
-
     # return {"package_exists": True}
     raise HTTPException(status_code=500, detail="Not implemented")
 
@@ -77,3 +76,11 @@ def get_difference_of_package_closures(package1: str, package2: str):
     raise HTTPException(status_code=500, detail="Not implemented")
 
 
+def run_dev_server():
+    import uvicorn
+
+    uvicorn.run("back.main:app", reload=True)
+
+
+if __name__ == '__main__':
+    run_dev_server()
