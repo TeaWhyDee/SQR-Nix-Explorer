@@ -9,3 +9,7 @@ Software Quality and Reliability project.
 3. Run `poetry install` in root directory
 4. Run `pre-commit` to initialize pre-commit hooks (linters and formatters)
 5. Run `poetry run dev` to run API backend
+
+# Tests
+
+For executing tests run `poetry run pytest`
