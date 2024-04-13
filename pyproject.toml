@@ -6,6 +6,7 @@ readme = "README.md"
 authors = []
 packages = [
     { include = "back" },
+    { include = "tests" },
 ]
 
 [tool.poetry.dependencies]
@@ -16,6 +17,7 @@ sqlmodel = "^0.0.16"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.3.7"
+pytest = "^8.1.1"
 
 [build-system]
 requires = ["poetry-core"]
