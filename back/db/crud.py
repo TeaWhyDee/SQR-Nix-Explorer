@@ -12,6 +12,10 @@ def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode("utf-8"), salt).decode()
 
 
+class DBError(Exception):
+    pass
+
+
 class DB:
     def __init__(self, engine: Engine):
         self.engine = engine
@@ -23,9 +27,9 @@ class DB:
 
         return user
 
-    def create_user(self, username: str, password: str) -> User | None:
+    def create_user(self, username: str, password: str) -> User:
         if self.get_user(username) is not None:
-            return None
+            raise DBError(f"User {username} already exists")
 
         user = User(username=username, password_hash=hash_password(password))
 
@@ -36,12 +40,13 @@ class DB:
 
         return user
 
-    def get_password_hash(self, username: str) -> str | None:
-        with Session(self.engine) as session:
-            statement = select(User).where(User.username == username)
-            user = session.exec(statement).first()
+    def get_password_hash(self, username: str) -> str:
+        user = self.get_user(username)
 
-        return user.password_hash if user else None
+        if user is None:
+            raise DBError(f"User {username} not found")
+
+        return user.password_hash
 
     def get_user_list(self) -> Sequence[User]:
         with Session(self.engine) as session:
@@ -50,7 +55,17 @@ class DB:
 
         return users
 
+    def get_store(self, store_name: str) -> UserStore | None:
+        with Session(self.engine) as session:
+            statement = select(UserStore).where(UserStore.name == store_name)
+            store = session.exec(statement).first()
+
+        return store
+
     def create_store(self, user: User, store_name: str, store_id: str) -> UserStore:
+        if self.get_store(store_name) is not None:
+            raise DBError(f"Store {store_name} already exists")
+
         store = UserStore(name=store_name, user_id=user.id, id=store_id)
 
         with Session(self.engine) as session:
@@ -59,6 +74,17 @@ class DB:
             session.refresh(store)
 
         return store
+
+    def remove_store(self, store_id: str) -> None:
+        with Session(self.engine) as session:
+            statement = select(UserStore).where(UserStore.id == store_id)
+            store = session.exec(statement).first()
+
+            if store is not None:
+                raise DBError(f"Store {store_id} not found")
+
+            session.delete(store)
+            session.commit()
 
     def get_store_owner(self, store_id: str) -> User | None:
         with Session(self.engine) as session:

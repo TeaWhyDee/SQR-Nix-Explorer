@@ -1,5 +1,7 @@
+from pytest import raises
 from sqlmodel import Session, select
 
+from back.db.crud import DBError
 from back.db.models import User, UserStore
 
 
@@ -19,8 +21,8 @@ def test_create_user(db):
     assert results[0].password_hash != "password"
     assert results[0] == user
 
-    user = db.create_user("charlie", "password")
-    assert user is None
+    with raises(DBError):
+        db.create_user("charlie", "password")
 
 
 def test_get_password_hash(db, users):
@@ -30,8 +32,8 @@ def test_get_password_hash(db, users):
     password_hash = db.get_password_hash(users[1].username)
     assert password_hash == users[1].password_hash
 
-    password_hash = db.get_password_hash("aboba")
-    assert password_hash is None
+    with raises(DBError):
+        db.get_password_hash("aboba")
 
 
 def test_get_user_list(db, users):

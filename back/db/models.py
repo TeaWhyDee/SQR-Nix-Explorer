@@ -9,6 +9,6 @@ class User(SQLModel, table=True):
 
 class UserStore(SQLModel, table=True):
     id: str = Field(primary_key=True)
-    name: str
+    name: str = Field(unique=True)
 
     user_id: int | None = Field(default=None, foreign_key="user.id")
