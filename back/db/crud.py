@@ -2,7 +2,7 @@ from typing import Sequence
 
 from sqlmodel import Session, select
 
-from .models import User
+from .models import User, UserStore
 from sqlalchemy import Engine
 import bcrypt
 
@@ -39,3 +39,13 @@ class DB:
             users = session.exec(statement).all()
 
         return users
+
+    def create_store(self, user: User, store_name: str, store_id: str) -> UserStore:
+        store = UserStore(name=store_name, user_id=user.id, id=store_id)
+
+        with Session(self.engine) as session:
+            session.add(store)
+            session.commit()
+            session.refresh(store)
+
+        return store
