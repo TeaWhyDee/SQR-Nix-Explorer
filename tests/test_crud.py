@@ -1,23 +1,6 @@
-from pytest import fixture
 from sqlmodel import Session
 
 from back.db.models import User
-
-
-@fixture()
-def users(engine):
-    with Session(engine) as session:
-        users = [
-            User(username="bob", password_hash="some_hash"),
-            User(username="alice", password_hash="another_hash"),
-        ]
-        session.add_all(users)
-        session.commit()
-
-        for user in users:
-            session.refresh(user)
-
-    return users
 
 
 def test_create_user(db):
