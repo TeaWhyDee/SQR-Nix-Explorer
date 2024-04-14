@@ -22,6 +22,7 @@ class DB:
         with Session(self.engine) as session:
             session.add(user)
             session.commit()
+            session.refresh(user)
 
         return user
 
@@ -29,10 +30,12 @@ class DB:
         with Session(self.engine) as session:
             statement = select(User).where(User.username == username)
             user = session.exec(statement).first()
+
         return user.password_hash if user else None
 
     def get_user_list(self) -> Sequence[User]:
         with Session(self.engine) as session:
             statement = select(User)
             users = session.exec(statement).all()
+
         return users

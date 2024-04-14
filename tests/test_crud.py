@@ -26,7 +26,7 @@ def test_create_user(db):
 
         assert len(results) == 0
 
-    db.create_user("charlie", "password")
+    user = db.create_user("charlie", "password")
 
     with Session(db.engine) as session:
         statement = session.query(User)
@@ -35,6 +35,7 @@ def test_create_user(db):
         assert len(results) == 1
         assert results[0].username == "charlie"
         assert results[0].password_hash != "password"
+        assert results[0] == user
 
 
 def test_get_password_hash(db, users):
