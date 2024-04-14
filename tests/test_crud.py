@@ -54,3 +54,18 @@ def test_get_store_owner(db, users):
 
     owner = db.get_store_owner("aboba")
     assert owner is None
+
+
+def test_get_user_stores(db, users):
+    store1 = db.create_store(users[0], "Store 1", "nix_id")
+    store2 = db.create_store(users[0], "Store 2", "nix_id2")
+    store3 = db.create_store(users[1], "Store 3", "nix_id3")
+
+    stores = db.get_user_stores(users[0].username)
+    assert stores == [store1, store2]
+
+    stores = db.get_user_stores(users[1].username)
+    assert stores == [store3]
+
+    stores = db.get_user_stores("aboba")
+    assert stores == []

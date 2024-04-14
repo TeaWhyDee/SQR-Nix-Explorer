@@ -56,3 +56,10 @@ class DB:
             user = session.exec(statement).first()
 
         return user
+
+    def get_user_stores(self, username: str) -> Sequence[UserStore]:
+        with Session(self.engine) as session:
+            statement = select(UserStore).join(User).where(User.username == username)
+            stores = session.exec(statement).all()
+
+        return stores
