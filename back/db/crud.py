@@ -16,7 +16,17 @@ class DB:
     def __init__(self, engine: Engine):
         self.engine = engine
 
-    def create_user(self, username: str, password: str) -> User:
+    def get_user(self, username: str) -> User | None:
+        with Session(self.engine) as session:
+            statement = select(User).where(User.username == username)
+            user = session.exec(statement).first()
+
+        return user
+
+    def create_user(self, username: str, password: str) -> User | None:
+        if self.get_user(username) is not None:
+            return None
+
         user = User(username=username, password_hash=hash_password(password))
 
         with Session(self.engine) as session:
