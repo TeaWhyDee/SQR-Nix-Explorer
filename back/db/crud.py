@@ -49,3 +49,10 @@ class DB:
             session.refresh(store)
 
         return store
+
+    def get_store_owner(self, store_id: str) -> User:
+        with Session(self.engine) as session:
+            statement = select(User).join(UserStore).where(UserStore.id == store_id)
+            user = session.exec(statement).first()
+
+        return user

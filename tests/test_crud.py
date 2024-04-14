@@ -1,19 +1,18 @@
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 from back.db.models import User, UserStore
 
 
 def test_create_user(db):
     with Session(db.engine) as session:
-        results = session.query(User).all()
+        results = session.exec(select(User)).all()
 
     assert len(results) == 0
 
     user = db.create_user("charlie", "password")
 
     with Session(db.engine) as session:
-        statement = session.query(User)
-        results = statement.all()
+        results = session.exec(select(User)).all()
 
     assert len(results) == 1
     assert results[0].username == "charlie"
@@ -40,8 +39,18 @@ def test_create_store(db, users):
     store = db.create_store(users[0], "Store 1", "nix_id")
 
     with Session(db.engine) as session:
-        results = session.query(UserStore).all()
+        results = session.exec(select(UserStore)).all()
 
     assert len(results) == 1
     assert results[0] == store
     assert results[0].user_id == users[0].id
+
+
+def test_get_store_owner(db, users):
+    store = db.create_store(users[0], "Store 1", "nix_id")
+
+    owner = db.get_store_owner(store.id)
+    assert owner == users[0]
+
+    owner = db.get_store_owner("aboba")
+    assert owner is None

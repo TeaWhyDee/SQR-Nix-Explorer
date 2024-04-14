@@ -1,14 +1,18 @@
 from pytest import fixture
 from sqlalchemy import Engine
-from sqlmodel import create_engine, SQLModel, Session
+from sqlmodel import create_engine, Session
+
+from back.db.base import setup_logging, create_engine, create_db_and_tables
 from back.db.crud import DB
 from back.db.models import User
+
+setup_logging(debug=True)
 
 
 @fixture()
 def engine() -> Engine:
-    engine = create_engine("sqlite:///:memory:", echo=True)
-    SQLModel.metadata.create_all(engine)
+    engine = create_engine(":memory:")
+    create_db_and_tables(engine)
     return engine
 
 

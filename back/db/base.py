@@ -1,14 +1,30 @@
-from sqlmodel import SQLModel, create_engine
+import logging
 
-sqlite_file_name = "database.db"
-sqlite_url = f"sqlite:///{sqlite_file_name}"
-
-engine = create_engine(sqlite_url, echo=True)
+from sqlalchemy import Engine
+from sqlmodel import SQLModel, create_engine as create_engine_sqlmodel
 
 
-def create_db_and_tables():
+def setup_logging(debug: bool = False):
+    level = logging.DEBUG if debug else logging.INFO
+    logging.basicConfig(
+        level=level, format="%(asctime)s.%(msecs)03d - %(message)s", datefmt="%H:%M:%S"
+    )
+
+    if debug:
+        sql_logger = logging.getLogger("sqlalchemy")
+        sql_logger.setLevel(logging.INFO)
+
+
+def create_engine(filename: str) -> Engine:
+    sqlite_url = f"sqlite:///{filename}"
+
+    return create_engine_sqlmodel(sqlite_url)
+
+
+def create_db_and_tables(engine: Engine):
     SQLModel.metadata.create_all(engine)
 
 
 if __name__ == "__main__":
-    create_db_and_tables()
+    setup_logging()
+    create_db_and_tables(create_engine(":memory:"))
