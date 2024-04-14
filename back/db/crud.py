@@ -60,7 +60,7 @@ class DB:
 
         return store
 
-    def get_store_owner(self, store_id: str) -> User:
+    def get_store_owner(self, store_id: str) -> User | None:
         with Session(self.engine) as session:
             statement = select(User).join(UserStore).where(UserStore.id == store_id)
             user = session.exec(statement).first()
