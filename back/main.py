@@ -29,7 +29,8 @@ def logout():
 @app.post("/add_store")
 def add_store(store_name: str):
     # Check for auth etc
-
+    # Check that store doesn't already exist
+    
     # TODO: Check for exceptions from nix
     # Probably call like this?
     try:
