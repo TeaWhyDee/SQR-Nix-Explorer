@@ -149,7 +149,9 @@ def get_difference_of_paths(store_id1: str, store_id2: str) -> List[str]:
     return list(set(paths1) - set(paths2))
 
 
-def get_difference_of_package_closures(store1: str, package1: str, store2: str, package2: str) -> List[str]:
+def get_difference_of_package_closures(
+    store1: str, package1: str, store2: str, package2: str
+) -> List[str]:
     """
     Returns a list of paths that are in first package but not in second.
     Throws an exception on nix error.

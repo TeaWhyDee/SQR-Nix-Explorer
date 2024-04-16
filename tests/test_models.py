@@ -3,7 +3,7 @@ from sqlmodel import Session, select
 from back.db.models import User, UserStore
 
 
-def test_create_user(engine):
+def test_create_user(engine, db):
     user = User(username="bob", password_hash="some_hash")
 
     with Session(engine) as session:
@@ -18,7 +18,7 @@ def test_create_user(engine):
         assert results[0].username == "bob"
 
 
-def test_store(engine, users):
+def test_store(engine, db, users):
     store = UserStore(id="nix_id", name="Store 1", user_id=users[0].id)
 
     with Session(engine) as session:
@@ -26,7 +26,9 @@ def test_store(engine, users):
         session.commit()
 
     with Session(engine) as session:
-        statement = select(User, UserStore).join(UserStore).where(UserStore.id == "nix_id")
+        statement = (
+            select(User, UserStore).join(UserStore).where(UserStore.id == "nix_id")
+        )
         results = session.exec(statement).all()
 
         user, store = results[0]
