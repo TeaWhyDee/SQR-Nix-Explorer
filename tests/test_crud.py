@@ -1,7 +1,7 @@
 from pytest import raises
 from sqlmodel import Session, select
 
-from back.db.crud import DBError
+from back.db.repository import DBError
 from back.db.models import User, UserStore
 
 

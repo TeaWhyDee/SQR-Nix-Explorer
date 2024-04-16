@@ -1,13 +1,15 @@
 from fastapi import APIRouter, HTTPException
 
 from back import nix
+from back.api.dependencies import CurrentUserDep
 
-store = APIRouter(prefix="/store")
+store = APIRouter(prefix="/store", tags=["Store"])
 
 
 @store.post("/add_store")
-def add_store(store_name: str):
+def add_store(store_name: str, user: CurrentUserDep):
     # Check for auth etc
+    # Check that store doesn't already exist
 
     # TODO: Check for exceptions from nix
     # Probably call like this?

@@ -25,6 +25,10 @@ def create_db_and_tables(engine: Engine):
     SQLModel.metadata.create_all(engine)
 
 
+def remove_db_and_tables(engine: Engine):
+    SQLModel.metadata.drop_all(engine)
+
+
 if __name__ == "__main__":
     setup_logging()
     create_db_and_tables(create_engine(":memory:"))
