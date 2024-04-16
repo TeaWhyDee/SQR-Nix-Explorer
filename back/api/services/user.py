@@ -10,4 +10,3 @@ def authenticate_user(db: DB, username: str, password: str) -> User | None:
     if not verify_password(password, user.password_hash):
         return
     return user
-

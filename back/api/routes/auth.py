@@ -14,17 +14,16 @@ auth = APIRouter(prefix="/auth", tags=["Auth"])
 
 # ===== USER =====
 @auth.post("/register", response_model=UserInfo)
-def register(user: UserCreate,
-             db: DBDep):
+def register(user: UserCreate, db: DBDep):
     user = db.create_user(user.username, user.password)
     return user
 
 
 @auth.post("/token")
 async def login_for_access_token(
-        form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
-        db: DBDep,
-        settings: SettingsDep
+    form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
+    db: DBDep,
+    settings: SettingsDep,
 ) -> Token:
     user = authenticate_user(db, form_data.username, form_data.password)
     if not user:
@@ -38,6 +37,6 @@ async def login_for_access_token(
         data={"sub": user.username},
         expires_delta=expires_delta,
         jwt_secret_key=settings.secret_key,
-        jwt_algorithm=settings.jwt_algorithm
+        jwt_algorithm=settings.jwt_algorithm,
     )
     return Token(access_token=access_token, token_type="bearer")

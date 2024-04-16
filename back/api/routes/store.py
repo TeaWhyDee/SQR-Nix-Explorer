@@ -52,6 +52,8 @@ def get_difference_of_paths(store_name1: str, store_name2: str, user: CurrentUse
 
 
 @store.get("/store/get_difference_paths")
-def get_difference_of_package_closures(package1: str, package2: str, user: CurrentUserDep):
+def get_difference_of_package_closures(
+    package1: str, package2: str, user: CurrentUserDep
+):
     # ex: store1#bash,  store2#hello
     raise HTTPException(status_code=500, detail="Not implemented")

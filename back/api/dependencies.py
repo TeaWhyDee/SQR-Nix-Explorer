@@ -26,7 +26,9 @@ SettingsDep = Annotated[Settings, Depends(get_settings)]
 
 async def get_db(settings: SettingsDep) -> DB:
     engine = create_engine(settings.db_engine)
-    create_db_and_tables(engine)  # TODO: remove maybe? we don't need to init db on each start
+    create_db_and_tables(
+        engine
+    )  # TODO: remove maybe? we don't need to init db on each start
     return DB(engine)
 
 
@@ -41,7 +43,9 @@ async def get_current_user(token: TokenDep, settings: SettingsDep, db: DBDep) ->
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
-        payload = jwt.decode(token, settings.secret_key, algorithms=[settings.jwt_algorithm])
+        payload = jwt.decode(
+            token, settings.secret_key, algorithms=[settings.jwt_algorithm]
+        )
         username: str = payload.get("sub")
         if username is None:
             raise credentials_exception

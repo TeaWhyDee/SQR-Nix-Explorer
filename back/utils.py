@@ -16,7 +16,9 @@ def hash_password(password: str) -> str:
     return hashpw(password.encode(), gensalt()).decode()
 
 
-def create_access_token(data: dict, expires_delta: timedelta, jwt_secret_key: str, jwt_algorithm: str) -> str:
+def create_access_token(
+    data: dict, expires_delta: timedelta, jwt_secret_key: str, jwt_algorithm: str
+) -> str:
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + expires_delta
     to_encode.update({"exp": expire})

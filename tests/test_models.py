@@ -26,7 +26,9 @@ def test_store(engine, db, users):
         session.commit()
 
     with Session(engine) as session:
-        statement = select(User, UserStore).join(UserStore).where(UserStore.id == "nix_id")
+        statement = (
+            select(User, UserStore).join(UserStore).where(UserStore.id == "nix_id")
+        )
         results = session.exec(statement).all()
 
         user, store = results[0]

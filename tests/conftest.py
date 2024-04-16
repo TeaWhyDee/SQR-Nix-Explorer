@@ -4,10 +4,15 @@ from functools import lru_cache
 from fastapi.testclient import TestClient
 from pytest import fixture
 from sqlalchemy import Engine
-from sqlmodel import create_engine, Session
+from sqlmodel import Session
 
 from back.api.dependencies import get_db
-from back.db.base import setup_logging, create_engine, create_db_and_tables, remove_db_and_tables
+from back.db.base import (
+    setup_logging,
+    create_engine,
+    create_db_and_tables,
+    remove_db_and_tables,
+)
 from back.db.models import User
 from back.db.repository import DB
 from back.main import get_app
@@ -44,7 +49,7 @@ def users(db, engine):
     with Session(engine) as session:
         users = [
             User(username="bob", password_hash=hash_password("bob")),
-            User(username="alice", password_hash=hash_password("alice"))
+            User(username="alice", password_hash=hash_password("alice")),
         ]
         session.add_all(users)
         session.commit()
