@@ -4,7 +4,7 @@ from back.api.routes import routers
 
 
 def get_app(debug=False):
-    app = FastAPI(debug=debug)
+    app = FastAPI(debug=debug, title="Nix Explorer")
     for router in routers:
         app.include_router(router)
     return app

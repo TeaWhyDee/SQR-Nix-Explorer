@@ -3,8 +3,6 @@ from pydantic_settings import BaseSettings
 
 
 class Settings(BaseSettings):
-    app_name: str = "Nix Explorer"
-
     db_engine: str = "./sqlite.db"
 
     secret_key: str = "secret"
