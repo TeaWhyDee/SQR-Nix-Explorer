@@ -47,3 +47,19 @@ class MockNixApi(NixAPI):
             Package(name="yaya", closure_size=4),
             Package(name="balls", closure_size=7),
         ]
+        
+    def difference_paths(self, package1: str, package2: str) -> List[str]:
+        return [
+            'path1',
+            'path2',
+            'path3',
+            'path4',
+        ]
+    
+    def difference_closures(self, package1: str, package2: str) -> List[Package]:
+        return [
+            'closure1',
+            'closure2',
+            'closure3',
+            'closure4',
+        ]
