@@ -27,6 +27,7 @@ PACKAGES = [
     Package(id=19, name="yaya", closure_size=4),
     Package(id=20, name="balls", closure_size=7),
 ]
+wid = 21
 
 
 class MockNixApi(NixAPI):
@@ -76,3 +77,8 @@ class MockNixApi(NixAPI):
             "closure3",
             "closure4",
         ]
+
+    def add_package(self, name: str):
+        global wid
+        wid += 1
+        PACKAGES.append(Package(id=wid, name=name, closure_size=11))

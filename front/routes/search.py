@@ -26,3 +26,14 @@ def search(api: NixAPI):
                     st.error(f"Error deleting package: {e}")
 
             st.markdown("---")
+
+    if not filtered_packages:
+        if st.button("Add Package"):
+            if search_term:
+                try:
+                    api.add_package(search_term)
+                    st.success(f"Package '{search_term}' added successfully!")
+                    st.rerun()
+
+                except Exception as e:
+                    st.error(f"Error adding package: {e}")

@@ -32,3 +32,7 @@ class NixAPI(ABC):
     @abstractmethod
     def difference_closures(self, package1: str, package2: str) -> List[str]:
         pass
+
+    @abstractmethod
+    def add_package(self, name: str):
+        pass
