@@ -24,3 +24,11 @@ class NixAPI(ABC):
     @abstractmethod
     def rm_package(self, package_id: int):
         pass
+
+    @abstractmethod
+    def difference_paths(self, package1: str, package2: str) -> List[str]:
+        pass
+
+    @abstractmethod
+    def difference_closures(self, package1: str, package2: str) -> List[str]:
+        pass

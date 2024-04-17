@@ -60,3 +60,19 @@ class MockNixApi(NixAPI):
 
         # Package not found
         raise ValueError(f"Package with ID {package_id} not found.")
+
+    def difference_paths(self, package1: str, package2: str) -> List[str]:
+        return [
+            "path1",
+            "path2",
+            "path3",
+            "path4",
+        ]
+
+    def difference_closures(self, package1: str, package2: str) -> List[Package]:
+        return [
+            "closure1",
+            "closure2",
+            "closure3",
+            "closure4",
+        ]
