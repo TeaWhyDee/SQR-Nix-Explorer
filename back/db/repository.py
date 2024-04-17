@@ -1,15 +1,10 @@
 from typing import Sequence
 
+from sqlalchemy import Engine
 from sqlmodel import Session, select
 
-from .models import User, UserStore
-from sqlalchemy import Engine
-import bcrypt
-
-
-def hash_password(password: str) -> str:
-    salt = bcrypt.gensalt()
-    return bcrypt.hashpw(password.encode("utf-8"), salt).decode()
+from back.db.models import User, UserStore
+from back.utils import hash_password
 
 
 class DBError(Exception):

@@ -1,9 +1,15 @@
 from sqlmodel import Field, SQLModel
 
 
-class User(SQLModel, table=True):
-    id: int | None = Field(default=None, primary_key=True)
+class UserBase(SQLModel):
     username: str = Field(unique=True)
+
+
+class UserWithID(UserBase):
+    id: int | None = Field(default=None, primary_key=True)
+
+
+class User(UserWithID, table=True):
     password_hash: str
 
 
