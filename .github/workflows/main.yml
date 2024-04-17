@@ -1,11 +1,29 @@
-name: Examples
-on: push
+name: CI
+
+on: [ push, pull_request ]
+
 jobs:
-  minimal:
+  ci:
     runs-on: ubuntu-latest
     steps:
-      - uses: nixbuild/nix-quick-install-action@v27
-      - run: nix build --version
-      # - run: nix build ./examples/flakes-simple
-      # - name: hello
-      #   run: ./result/bin/hello
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install poetry
+        run: pipx install poetry==1.7.1
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11.5
+          cache: 'poetry'
+      - name: Install dependencies
+        run: poetry install
+      - name: Install Nix
+        uses: nixbuild/nix-quick-install-action@v27
+      - name: Check Nix installation
+        run: nix build --version
+      - name: Run ruff linter
+        run: poetry run ruff check
+      - name: Run McCabe complexity test
+        run: poetry run ruff check --select C901
+      - name: Run pytest
+        run: poetry run pytest
