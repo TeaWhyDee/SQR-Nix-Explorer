@@ -1,4 +1,7 @@
 from abc import ABC, abstractmethod
+from typing import List
+
+from structs.package import Package
 
 
 class NixAPI(ABC):
@@ -12,4 +15,8 @@ class NixAPI(ABC):
 
     @abstractmethod
     def is_logged_in() -> bool:
+        pass
+
+    @abstractmethod
+    def packages(self) -> List[Package]:
         pass
