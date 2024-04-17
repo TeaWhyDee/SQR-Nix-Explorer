@@ -31,11 +31,6 @@ def register(api: NixAPI):
             st.error("Invalid username or password")
             return False
 
-def homepage():
-    st.title("Welcome to My App")
-    st.write("This is the homepage.")
-
-
 def main():
     api = MockNixApi(StSessKvStore("mock-api-"))
 
