@@ -20,3 +20,7 @@ class NixAPI(ABC):
     @abstractmethod
     def packages(self) -> List[Package]:
         pass
+
+    @abstractmethod
+    def rm_package(self, package_id: int):
+        pass

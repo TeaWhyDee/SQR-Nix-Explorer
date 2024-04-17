@@ -11,6 +11,18 @@ def search(api: NixAPI):
     ]
 
     for package in filtered_packages:
-        st.write(f"- **Name:** {package.name}")
-        st.write(f"- **Closure Size:** {package.closure_size} bytes")
-        st.markdown("---")  # Separator
+        with st.container():
+            col1, col2 = st.columns(2)
+
+            col1.write(f"**Name:** {package.name}")
+            col1.write(f"**Closure Size:** {package.closure_size} packages")
+
+            if col2.button(f"Delete {package.name}"):
+                try:
+                    api.rm_package(package.id)
+                    st.rerun()
+
+                except Exception as e:
+                    st.error(f"Error deleting package: {e}")
+
+            st.markdown("---")

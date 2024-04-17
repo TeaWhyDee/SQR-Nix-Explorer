@@ -5,6 +5,7 @@ from services.mock_nix_api import MockNixApi
 from services.nix_api import NixAPI
 from services.st_sess_kv_store import StSessKvStore
 
+
 def login(api: NixAPI):
     username = st.text_input("Username")
     password = st.text_input("Password", type="password")
@@ -17,6 +18,7 @@ def login(api: NixAPI):
         except ValueError:
             st.error("Invalid username or password")
             return False
+
 
 def register(api: NixAPI):
     username = st.text_input("Username")
@@ -31,6 +33,7 @@ def register(api: NixAPI):
             st.error("Invalid username or password")
             return False
 
+
 def main():
     api = MockNixApi(StSessKvStore("mock-api-"))
 
@@ -40,7 +43,9 @@ def main():
     SEARCH = "Search"
 
     st.sidebar.title("Navigation")
-    page = st.sidebar.radio("Go to", [DIFF, SEARCH] if api.is_logged_in() else [LOGIN, REGISTER])
+    page = st.sidebar.radio(
+        "Go to", [DIFF, SEARCH] if api.is_logged_in() else [SEARCH, LOGIN, REGISTER]
+    )
 
     if page == LOGIN:
         if login(api):
