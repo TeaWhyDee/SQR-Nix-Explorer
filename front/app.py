@@ -44,7 +44,7 @@ def main():
 
     st.sidebar.title("Navigation")
     page = st.sidebar.radio(
-        "Go to", [DIFF, SEARCH] if api.is_logged_in() else [LOGIN, REGISTER]
+        "Go to", [SEARCH, DIFF] if api.is_logged_in() else [LOGIN, REGISTER]
     )
 
     if page == LOGIN:
