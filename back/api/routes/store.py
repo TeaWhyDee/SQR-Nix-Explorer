@@ -74,8 +74,7 @@ def get_difference_of_paths(
 
 @store_router.get("/store/get_difference_paths")
 def get_difference_of_package_closures(
-    package1: str, package2: str, user: CurrentUserDep, nix: NixDep, db: DBDep
+        store1: str, package1: str, store2: str, package2: str, user: CurrentUserDep, nix: NixDep, db: DBDep
 ):
     # Where I should get stores? All user stores?
-    # ex: store1#bash,  store2#hello
     raise HTTPException(status_code=500, detail="Not implemented")
