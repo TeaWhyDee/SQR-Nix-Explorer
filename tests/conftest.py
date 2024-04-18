@@ -1,12 +1,14 @@
 import os
+import shutil
 from functools import lru_cache
+from typing import Iterator
 
 from fastapi.testclient import TestClient
 from pytest import fixture
 from sqlalchemy import Engine
 from sqlmodel import Session
 
-from back.api.dependencies import get_db
+from back.api.dependencies import get_db, get_nix
 from back.db.base import (
     setup_logging,
     create_engine,
@@ -16,6 +18,7 @@ from back.db.base import (
 from back.db.models import User
 from back.db.repository import DB
 from back.main import get_app
+from back.nix import Nix
 from back.utils import hash_password
 
 setup_logging(debug=True)
@@ -65,13 +68,30 @@ def get_app_cached():
     return get_app(debug=True)
 
 
+TEST_ROOT = "/tmp/nix"
+
+
+@fixture
+def NixAPI() -> Iterator[Nix]:
+    nix = Nix(stores_root=TEST_ROOT)
+
+    yield nix
+
+    # Cleanup:
+    # 1. Set permissions for deletion
+    # 2. Delete tree
+    for root, dirs, files in os.walk(TEST_ROOT):
+        for momo in dirs:
+            os.chmod(os.path.join(root, momo), 0o722)
+
+    shutil.rmtree(TEST_ROOT)
+
+
 @fixture()
-def client(db):
+def client(db, NixAPI):
     app = get_app_cached()
 
-    def _get_db():
-        return db
-
-    app.dependency_overrides[get_db] = _get_db
+    app.dependency_overrides[get_db] = lambda: db
+    app.dependency_overrides[get_nix] = lambda: NixAPI
 
     return TestClient(app)

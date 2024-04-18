@@ -1,4 +1,4 @@
-from .auth import auth
-from .store import store
+from .auth import auth_router
+from .store import store_router
 
-routers = [auth, store]
+routers = [auth_router, store_router]

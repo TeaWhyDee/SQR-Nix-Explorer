@@ -7,7 +7,7 @@ from back.db.models import User, UserStore
 from back.utils import hash_password
 
 
-class DBError(Exception):
+class DBException(Exception):
     pass
 
 
@@ -24,7 +24,7 @@ class DB:
 
     def create_user(self, username: str, password: str) -> User:
         if self.get_user(username) is not None:
-            raise DBError(f"User {username} already exists")
+            raise DBException(f"User {username} already exists")
 
         user = User(username=username, password_hash=hash_password(password))
 
@@ -39,7 +39,7 @@ class DB:
         user = self.get_user(username)
 
         if user is None:
-            raise DBError(f"User {username} not found")
+            raise DBException(f"User {username} not found")
 
         return user.password_hash
 
@@ -59,7 +59,7 @@ class DB:
 
     def create_store(self, user: User, store_name: str, store_id: str) -> UserStore:
         if self.get_store(store_name) is not None:
-            raise DBError(f"Store {store_name} already exists")
+            raise DBException(f"Store {store_name} already exists")
 
         store = UserStore(name=store_name, user_id=user.id, id=store_id)
 
@@ -75,8 +75,8 @@ class DB:
             statement = select(UserStore).where(UserStore.id == store_id)
             store = session.exec(statement).first()
 
-            if store is not None:
-                raise DBError(f"Store {store_id} not found")
+            if store is None:
+                raise DBException(f"Store {store_id} not found")
 
             session.delete(store)
             session.commit()

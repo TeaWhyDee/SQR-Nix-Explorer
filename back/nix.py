@@ -10,6 +10,14 @@ DEFAULT_STORES_ROOT = "/nix_stores/"
 NIX_DB_PATH = "nix/var/nix/db/db.sqlite"
 
 
+class NixException(Exception):
+    pass
+
+
+class StoreExistsException(NixException):
+    pass
+
+
 class Nix:
     def __init__(self, stores_root: str = DEFAULT_STORES_ROOT):
         self.stores_root = stores_root
@@ -25,7 +33,7 @@ class Nix:
 
         if process.returncode != 0 and throw_on_fail:
             error_message = stderr.decode().strip()
-            raise Exception(f"Error during nix execution:\n{error_message}")
+            raise NixException(f"Error during nix execution:\n{error_message}")
 
         return process.returncode, stdout, stderr
 
@@ -82,7 +90,7 @@ class Nix:
         directory_path = self.get_store_path(store_name)
 
         if os.path.exists(directory_path):
-            raise Exception(
+            raise StoreExistsException(
                 f"Store named {store_name} already exists in the filetree."
             )
 
@@ -103,7 +111,7 @@ class Nix:
         # TODO: decide if keep this check.
         abs_root = os.path.abspath(self.stores_root)
         if os.path.commonpath([directory_path, abs_root]) != abs_root:
-            raise Exception("Attempted to delete something outside stores dir")
+            raise NixException("Attempted to delete something outside stores dir")
 
         shutil.rmtree(directory_path)
 
@@ -177,9 +185,7 @@ class Nix:
         size = stdout.decode().strip().split("\t")[1]
         return int(size)
 
-    def get_difference_of_paths(
-        self, store_id1: str, store_id2: str
-    ) -> List[str]:
+    def get_difference_of_paths(self, store_id1: str, store_id2: str) -> List[str]:
         """
         Returns a list of paths that are in first store but not in second.
         Throws an exception on nix error.

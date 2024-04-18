@@ -1,10 +1,14 @@
 from fastapi import FastAPI
 
+from back.api.errors import add_errors
 from back.api.routes import routers
 
 
 def get_app(debug=False):
     app = FastAPI(debug=debug, title="Nix Explorer")
+
+    add_errors(app)
+
     for router in routers:
         app.include_router(router)
     return app
