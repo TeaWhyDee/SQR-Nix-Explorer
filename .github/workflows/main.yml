@@ -31,6 +31,7 @@ jobs:
           nix registry pin github:NixOS/nixpkgs/nixos-21.05
           nix build --no-link nixpkgs#glibc
           nix build --no-link nixpkgs#hello
+          nix build --no-link nixpkgs#busybox
       - name: Run ruff linter
         run: poetry run ruff check
       - name: Run McCabe complexity test
