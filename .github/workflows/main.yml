@@ -3,7 +3,15 @@ name: CI
 on: [ push, pull_request ]
 
 jobs:
-  ci:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Build Docker image
+        uses: docker build -t nix-explorer:latest .
+  test:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
