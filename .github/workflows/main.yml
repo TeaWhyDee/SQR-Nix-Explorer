@@ -21,6 +21,12 @@ jobs:
         uses: nixbuild/nix-quick-install-action@v27
       - name: Check Nix installation
         run: nix build --version
+      - name: Configure Nix
+        run: nix-env --install --file '<nixpkgs>' --attr nix cacert -I nixpkgs=channel:nixpkgs-stable
+        run: nix registry add nixpkgs github:NixOS/nixpkgs/nixos-21.05
+        run: nix registry pin github:NixOS/nixpkgs/nixos-21.05
+        run: nix build --no-link nixpkgs#glibc
+        run: nix build --no-link nixpkgs#hello
       - name: Run ruff linter
         run: poetry run ruff check
       - name: Run McCabe complexity test
