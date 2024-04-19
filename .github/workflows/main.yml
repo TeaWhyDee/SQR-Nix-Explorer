@@ -20,10 +20,13 @@ jobs:
       - name: Install Nix
         uses: nixbuild/nix-quick-install-action@v27
       - name: Check Nix installation
-        run: nix build --version; echo $HOME
+        run: |
+          nix build --version
+          mkdir -p $HOME/.config/nix
+          echo "experimental-features = nix-command flakes" > $HOME/.config/nix/nix.conf
       - name: Configure Nix
         run: |
-          nix-env --install --file '<nixpkgs>' --attr nix cacert -I nixpkgs=channel:nixpkgs-stable
+          # nix-env --install --file '<nixpkgs>' --attr nix cacert -I nixpkgs=channel:nixpkgs-stable
           nix registry add nixpkgs github:NixOS/nixpkgs/nixos-21.05
           nix registry pin github:NixOS/nixpkgs/nixos-21.05
           nix build --no-link nixpkgs#glibc
