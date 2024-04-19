@@ -9,7 +9,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Build Docker image
-        uses: docker build -t nix-explorer:latest .
+        run: docker build -t nix-explorer:latest .
   test:
     needs: build
     runs-on: ubuntu-latest
