@@ -46,7 +46,7 @@ class Nix:
         directory_path = self._get_store_path(store_name)
 
         if not os.path.exists(directory_path):
-            raise Exception(f"Store doesn't exist")
+            raise Exception("Store doesn't exist")
 
     def _get_store_paths(self, store_id: str):
         self._assert_store_exists(store_id)
@@ -105,9 +105,7 @@ class Nix:
 
         # Create store directory if it doesn't exist
         if os.path.exists(directory_path):
-            raise Exception(
-                f"Store named {store_name} already exists in the filetree."
-            )
+            raise Exception(f"Store named {store_name} already exists in the filetree.")
         os.makedirs(directory_path)
 
         # Pin registry ?
@@ -215,9 +213,7 @@ class Nix:
         size = stdout.decode().strip().split("\t")[1]
         return int(size)
 
-    def get_difference_of_paths(
-        self, store_id1: str, store_id2: str
-    ) -> List[str]:
+    def get_difference_of_paths(self, store_id1: str, store_id2: str) -> List[str]:
         """
         Returns a list of paths that are in first store but not in second.
         Throws an exception on nix error.

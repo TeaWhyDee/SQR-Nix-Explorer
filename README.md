@@ -17,6 +17,11 @@ nix registry add nixpkgs github:NixOS/nixpkgs/nixos-21.05
 nix registry pin github:NixOS/nixpkgs/nixos-21.05
 ```
 
+Configure nix ($HOME/.config/nix/nix.conf)
+```bash
+experimental-features = nix-command flakes
+```
+
 For caching in tests, build a few basic packages (optional):
 ```bash
 nix build --no-link nixpkgs#glibc
