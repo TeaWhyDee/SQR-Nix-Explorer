@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 
 from back.api.dependencies import CurrentUserDep, NixDep, DBDep
 from back.api.errors import ErrorResponse
@@ -74,7 +74,17 @@ def get_difference_of_paths(
 
 @store_router.get("/store/get_difference_paths")
 def get_difference_of_package_closures(
-        store1: str, package1: str, store2: str, package2: str, user: CurrentUserDep, nix: NixDep, db: DBDep
+    store_name1: str,
+    package1: str,
+    store_name2: str,
+    package2: str,
+    user: CurrentUserDep,
+    nix: NixDep,
+    db: DBDep,
 ):
-    # Where I should get stores? All user stores?
-    raise HTTPException(status_code=500, detail="Not implemented")
+    store1 = get_store_for_interactions(store_name1, db, user)
+    store2 = get_store_for_interactions(store_name2, db, user)
+
+    return nix.get_difference_of_package_closures(
+        store1.id, package1, store2.id, package2
+    )
