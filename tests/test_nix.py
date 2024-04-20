@@ -1,3 +1,4 @@
+from typing import Iterator
 import os
 import re
 import shutil
@@ -142,7 +143,6 @@ def test_get_difference_of_paths(NixAPI):
 
     assert len(NixAPI.get_difference_of_paths(store_name1, store_name2)) == 1
     assert len(NixAPI.get_difference_of_paths(store_name2, store_name1)) == 157
-
 
 
 def test_get_difference_of_package_closures(NixAPI):
