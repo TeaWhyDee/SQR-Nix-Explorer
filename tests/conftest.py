@@ -1,5 +1,6 @@
 import os
 import shutil
+import subprocess
 from functools import lru_cache
 from typing import Iterator
 
@@ -74,6 +75,17 @@ TEST_ROOT = "/tmp/nix"
 @fixture
 def NixAPI() -> Iterator[Nix]:
     nix = Nix(stores_root=TEST_ROOT)
+    store_name = "test_store"
+
+    nix.add_store(store_name)
+    command = [
+        "nix",
+        "copy",
+        "--to",
+        os.path.join(TEST_ROOT, store_name),
+        "nixpkgs#glibc",
+    ]
+    subprocess.run(command)
 
     yield nix
 
@@ -87,11 +99,25 @@ def NixAPI() -> Iterator[Nix]:
     shutil.rmtree(TEST_ROOT)
 
 
+@fixture
+def NixAPI_empty() -> Iterator[Nix]:
+    # Empty store (do not copy from cache)
+    nix = Nix(stores_root=TEST_ROOT)
+
+    yield nix
+
+    for root, dirs, files in os.walk(TEST_ROOT):
+        for momo in dirs:
+            os.chmod(os.path.join(root, momo), 0o722)
+
+    shutil.rmtree(TEST_ROOT)
+
+
 @fixture()
-def client(db, NixAPI):
+def client(db, NixAPI_empty):
     app = get_app_cached()
 
     app.dependency_overrides[get_db] = lambda: db
-    app.dependency_overrides[get_nix] = lambda: NixAPI
+    app.dependency_overrides[get_nix] = lambda: NixAPI_empty
 
     return TestClient(app)

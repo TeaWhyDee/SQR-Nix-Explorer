@@ -1,55 +1,9 @@
-from typing import Iterator
 import os
 import re
-import shutil
-import subprocess
 
 import pytest
 
-from back.nix import Nix
-
 from tests.conftest import TEST_ROOT
-
-
-@pytest.fixture
-def NixAPI() -> Iterator[Nix]:
-    nix = Nix(stores_root=TEST_ROOT)
-    store_name = "test_store"
-
-    nix.add_store(store_name)
-    command = [
-        "nix",
-        "copy",
-        "--to",
-        os.path.join(TEST_ROOT, store_name),
-        "nixpkgs#glibc",
-    ]
-    subprocess.run(command)
-
-    yield nix
-
-    # Cleanup:
-    # 1. Set permissions for deletion
-    # 2. Delete tree
-    for root, dirs, files in os.walk(TEST_ROOT):
-        for momo in dirs:
-            os.chmod(os.path.join(root, momo), 0o722)
-
-    shutil.rmtree(TEST_ROOT)
-
-
-@pytest.fixture
-def NixAPI_empty() -> Iterator[Nix]:
-    # Empty store (do not copy from cache)
-    nix = Nix(stores_root=TEST_ROOT)
-
-    yield nix
-
-    for root, dirs, files in os.walk(TEST_ROOT):
-        for momo in dirs:
-            os.chmod(os.path.join(root, momo), 0o722)
-
-    shutil.rmtree(TEST_ROOT)
 
 
 def test_add_store(NixAPI_empty):
