@@ -1,10 +1,10 @@
-from typing import List
-import shutil
+import concurrent.futures
 import os
-import subprocess
-
+import shutil
 import sqlite3
-
+import subprocess
+import sys
+from typing import List, IO
 
 DEFAULT_STORES_ROOT = "/nix_stores/"
 NIX_DB_PATH = "nix/var/nix/db/db.sqlite"
@@ -14,8 +14,20 @@ class NixException(Exception):
     pass
 
 
-class StoreExistsException(NixException):
-    pass
+def read_in_thread(io: IO[str], prefix="") -> str:
+    lines = []
+    while True:
+        line = io.readline().strip()
+
+        lines.append(line)
+        if line == "":
+            return "\n".join(lines)
+
+        file = sys.stdout
+        if prefix == "stderr":
+            file = sys.stderr
+
+        print(f"{prefix}: {line}", file=file, flush=True)
 
 
 class Nix:
@@ -38,23 +50,32 @@ class Nix:
             os.makedirs(self.stores_root)
 
     def _run_cmd(self, command: List[str], throw_on_fail: bool = True):
+        print(f"Executing nix command: {' '.join(command)}")
         command += self.command_append
         process = subprocess.Popen(
-            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding="utf-8"
         )
-        stdout, stderr = process.communicate()
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+            thread_stdout = executor.submit(read_in_thread, process.stdout, "stdout")
+            thread_stderr = executor.submit(read_in_thread, process.stderr, "stderr")
+
+            process.wait()
+
+            stdout = thread_stdout.result()
+            stderr = thread_stderr.result()
 
         if process.returncode != 0 and throw_on_fail:
-            error_message = stderr.decode().strip()
+            error_message = stderr.strip()
             raise NixException(f"Error during nix execution:\n{error_message}")
 
-        return process.returncode, stdout, stderr
+        return process.returncode, stdout.strip(), stderr.strip()
 
     def _assert_store_exists(self, store_name: str):
         directory_path = self._get_store_path(store_name)
 
         if not os.path.exists(directory_path):
-            raise Exception("Store doesn't exist")
+            raise NixException("Store doesn't exist")
 
     def _get_store_paths(self, store_id: str):
         self._assert_store_exists(store_id)
@@ -62,7 +83,7 @@ class Nix:
 
         command = ["nix", "--store", store_path, "path-info", "--all"]
         _, stdout, _ = self._run_cmd(command)
-        paths = stdout.decode().strip().split("\n")
+        paths = stdout.split("\n")
 
         return paths
 
@@ -79,7 +100,7 @@ class Nix:
             package,
         ]
         _, stdout, _ = self._run_cmd(command)
-        paths = stdout.decode().strip().split("\n")
+        paths = stdout.split("\n")
 
         return paths
 
@@ -113,7 +134,7 @@ class Nix:
 
         # Create store directory if it doesn't exist
         if os.path.exists(directory_path):
-            raise StoreExistsException(
+            raise NixException(
                 f"Store named {store_name} already exists in the filetree."
             )
 
@@ -165,6 +186,7 @@ class Nix:
             store_path,
             "build",
             "--no-link",
+            "--accept-flake-config",
             package_name,
         ]
 
@@ -223,7 +245,7 @@ class Nix:
         ]
         _, stdout, _ = self._run_cmd(command)
 
-        size = stdout.decode().strip().split("\t")[1]
+        size = stdout.split("\t")[1]
         return int(size)
 
     def get_difference_of_paths(self, store_id1: str, store_id2: str) -> List[str]:

@@ -35,7 +35,7 @@ def remove_store(store_name: str, user: CurrentUserDep, nix: NixDep, db: DBDep):
     db.remove_store(store.id)
 
 
-@store_router.post("/store/package", status_code=201)
+@store_router.post("/package", status_code=201)
 def add_package_to_store(
     store_name: str, package_name: str, user: CurrentUserDep, nix: NixDep, db: DBDep
 ):
@@ -44,7 +44,7 @@ def add_package_to_store(
     nix.add_package_to_store(store.id, package_name)
 
 
-@store_router.delete("/store/package", status_code=204)
+@store_router.delete("/package", status_code=204)
 def remove_package_from_store(
     store_name: str, package_name: str, user: CurrentUserDep, nix: NixDep, db: DBDep
 ):
@@ -53,7 +53,7 @@ def remove_package_from_store(
     nix.remove_package_from_store(store.id, package_name)
 
 
-@store_router.get("/store/check_package_exists")
+@store_router.get("/check_package_exists", response_model=bool)
 def check_package_exists(
     store_name: str, package_name: str, user: CurrentUserDep, nix: NixDep, db: DBDep
 ):
@@ -62,7 +62,7 @@ def check_package_exists(
     return nix.check_package_exists(store.id, package_name)
 
 
-@store_router.get("/store/get_difference_paths", response_model=list[str])
+@store_router.get("/get_difference_paths", response_model=list[str])
 def get_difference_of_paths(
     store_name1: str, store_name2: str, user: CurrentUserDep, nix: NixDep, db: DBDep
 ):
@@ -72,7 +72,7 @@ def get_difference_of_paths(
     return nix.get_difference_of_paths(store1.id, store2.id)
 
 
-@store_router.get("/store/get_difference_paths")
+@store_router.get("/get_difference_package_closures", response_model=list[str])
 def get_difference_of_package_closures(
     store_name1: str,
     package1: str,

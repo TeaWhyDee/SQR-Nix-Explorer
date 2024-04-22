@@ -17,7 +17,7 @@ def get_app(debug=False):
 def run_dev_server():
     import uvicorn
 
-    uvicorn.run("back.main:get_app", reload=True, factory=True)
+    uvicorn.run("back.main:get_app", reload=True, factory=True, reload_dirs=["back"])
 
 
 if __name__ == "__main__":
