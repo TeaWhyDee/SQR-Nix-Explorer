@@ -127,7 +127,7 @@ class Nix:
         """
         Creates a new directory for a new store.
         Raises exception if store already exists.
-        @returns: A path to created store (store ID).
+        @returns: A path (relative to the root directory) to created store (store ID).
         """
 
         directory_path = self._get_store_path(store_name)
@@ -138,21 +138,7 @@ class Nix:
                 f"Store named {store_name} already exists in the filetree."
             )
 
-        # Create store directory
-
         os.makedirs(directory_path)
-
-        # Pin registry ?
-        # command = [
-        #     "nix",
-        #     "registry",
-        #     "pin",
-        #     "/path/to/registry.json",
-        #     "--store",
-        #     directory_path,
-        # ]
-
-        # self._run_cmd(command)
 
         return store_name
 
@@ -166,7 +152,6 @@ class Nix:
         directory_path = self._get_store_path(store_id)
 
         # Check that the dir to be deleted in a folder we manage.
-        # TODO: decide if keep this check.
         abs_root = os.path.abspath(self.stores_root)
         if os.path.commonpath([directory_path, abs_root]) != abs_root:
             raise NixException("Attempted to delete something outside stores dir")

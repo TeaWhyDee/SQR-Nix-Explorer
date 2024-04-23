@@ -25,7 +25,7 @@ experimental-features = nix-command flakes
 For caching in tests, build a few basic packages (optional):
 ```bash
 nix build --no-link nixpkgs#glibc
-nix build --no-link nixpkgs#hello
+nix build --no-link nixpkgs#busybux
 ```
 
 
