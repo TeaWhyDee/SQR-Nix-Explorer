@@ -36,5 +36,5 @@ jobs:
         run: poetry run ruff check
       - name: Run McCabe complexity test
         run: poetry run ruff check --select C901
-      - name: Run pytest
-        run: poetry run pytest
+      - name: Run pytest with statement & branch coverage
+        run: poetry run pytest --cov=back --cov-branch --cov-fail-under=60 tests/
