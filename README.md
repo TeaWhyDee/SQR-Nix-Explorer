@@ -4,6 +4,32 @@ Software Quality and Reliability project.
 
 ## Development
 
+### Nix
+[Install](https://nixos.org/download/) nix through the install script and downgrade it to a stable release:
+```bash
+sh <(curl -L https://nixos.org/nix/install) --no-daemon
+nix-env --install --file '<nixpkgs>' --attr nix cacert -I nixpkgs=channel:nixpkgs-stable
+```
+
+Pin registry version on the system:
+```bash
+nix registry add nixpkgs github:NixOS/nixpkgs/nixos-21.05
+nix registry pin github:NixOS/nixpkgs/nixos-21.05
+```
+
+Configure nix ($HOME/.config/nix/nix.conf)
+```bash
+experimental-features = nix-command flakes
+```
+
+For caching in tests, build a few basic packages (optional):
+```bash
+nix build --no-link nixpkgs#glibc
+nix build --no-link nixpkgs#busybux
+```
+
+
+### BackEnd
 1. Clone project
 2. Install [poetry](https://python-poetry.org/docs/#installation) and [pre-commit](https://pre-commit.com/#install)
 3. Run `poetry install` in root directory
