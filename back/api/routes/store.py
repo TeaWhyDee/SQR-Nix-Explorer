@@ -88,3 +88,12 @@ def get_difference_of_package_closures(
     return nix.get_difference_of_package_closures(
         store1.id, package1, store2.id, package2
     )
+
+
+@store_router.get("/get_package_closure_size", response_model=int)
+def get_package_closure_size(
+    store_name: str, package: str, user: CurrentUserDep, nix: NixDep, db: DBDep
+):
+    store = get_store_for_interactions(store_name, db, user)
+
+    return nix.get_package_closure_size(store.id, package)
