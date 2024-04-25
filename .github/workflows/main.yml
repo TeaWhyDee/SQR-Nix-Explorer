@@ -38,3 +38,5 @@ jobs:
         run: poetry run ruff check --select C901
       - name: Run pytest with statement & branch coverage
         run: poetry run pytest --cov=back --cov-branch --cov-fail-under=60 tests/
+      - name: Check function coverage
+        run: poetry run fun-coverage --cov-fail-under=60
