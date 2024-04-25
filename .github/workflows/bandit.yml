@@ -31,7 +31,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Bandit Scan on Code
-        uses: shundor/python-bandit-scan@9cc5aa4a006482b8a7f91134412df6772dbda22c
+        uses: MrFired/python-bandit-scan@main
         with: # optional arguments
           # exit with 0, even with results found
           exit_zero: true # optional, default is DEFAULT
@@ -50,7 +50,7 @@ jobs:
           # path to a .bandit file that supplies command line arguments
           # ini_path: # optional, default is DEFAULT
       - name: Bandit Scan on Tests
-        uses: shundor/python-bandit-scan@9cc5aa4a006482b8a7f91134412df6772dbda22c
+        uses: MrFired/python-bandit-scan@main
         with:
           exit_zero: true 
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
