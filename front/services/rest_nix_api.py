@@ -9,7 +9,7 @@ _TOKEN_KEY = "token"
 class RestNixApi(NixAPI):
     def __init__(self, base_url: str, kv_store: KvStore) -> None:
         self.kv_store = kv_store
-        self.client = httpx.AsyncClient(base_url=base_url)
+        self.client = httpx.AsyncClient(base_url=base_url, timeout=httpx.Timeout(60))
         token = self.kv_store.get(_TOKEN_KEY)
         if token != "":
             self.client.headers = {"Authorization": f"Bearer {token}"}
