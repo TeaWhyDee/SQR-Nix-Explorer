@@ -30,6 +30,9 @@ class RestNixApi(NixAPI):
         self.kv_store.set(_TOKEN_KEY, token)
         self.client.headers = {"Authorization": f"Bearer {token}"}
 
+    async def logout(self):
+        del self.client.headers["Authorization"]
+
     async def is_logged_in(self) -> bool:
         return "Authorization" in self.client.headers
 
