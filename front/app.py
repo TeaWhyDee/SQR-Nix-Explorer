@@ -49,15 +49,16 @@ async def main():
 
     LOGIN = "Login"
     REGISTER = "Register"
-    SEARCH = "Search"
+    STORES = "Manage Stores"
+    SEARCH = "Manage Packages"
     DIFF_STORES = "Diff Stores"
     DIFF_PACKAGES = "Diff Packages"
-    STORES = "Stores"
 
     st.sidebar.title("Navigation")
     ili = await api.is_logged_in()
     page = st.sidebar.radio(
-        "Go to", [SEARCH, DIFF_STORES, STORES] if ili else [LOGIN, REGISTER]
+        "Go to",
+        [STORES, SEARCH, DIFF_STORES, DIFF_PACKAGES] if ili else [LOGIN, REGISTER],
     )
     if ili:
         logout = st.sidebar.button(label="Logout")
