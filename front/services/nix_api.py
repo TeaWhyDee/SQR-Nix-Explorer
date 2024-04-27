@@ -28,7 +28,7 @@ class NixAPI(ABC):
         pass
 
     @abstractmethod
-    async def add_package(self, name: str):
+    async def add_package(self, store: str, name: str):
         pass
 
     @abstractmethod

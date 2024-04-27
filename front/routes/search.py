@@ -22,7 +22,7 @@ async def search(api: NixAPI):
 
             if col2.button(f"Delete {package}"):
                 try:
-                    await api.rm_package(package)
+                    await api.rm_package(store, package)
                     st.rerun()
 
                 except Exception as e:
@@ -34,7 +34,7 @@ async def search(api: NixAPI):
         if st.button("Add Package"):
             if search_term:
                 try:
-                    await api.add_package(search_term)
+                    await api.add_package(store, search_term)
                     st.success(f"Package '{search_term}' added successfully!")
                     st.rerun()
 
