@@ -77,7 +77,7 @@ class Nix:
         if not os.path.exists(directory_path):
             raise NixException("Store doesn't exist")
 
-    def _get_store_paths(self, store_id: str):
+    def get_store_paths(self, store_id: str):
         self._assert_store_exists(store_id)
         store_path = self._get_store_path(store_id)
 
@@ -241,8 +241,8 @@ class Nix:
         self._assert_store_exists(store_id1)
         self._assert_store_exists(store_id2)
 
-        paths1 = self._get_store_paths(store_id1)
-        paths2 = self._get_store_paths(store_id2)
+        paths1 = self.get_store_paths(store_id1)
+        paths2 = self.get_store_paths(store_id2)
 
         return list(set(paths1) - set(paths2))
 

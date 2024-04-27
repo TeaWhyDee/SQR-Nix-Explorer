@@ -35,6 +35,12 @@ def remove_store(store_name: str, user: CurrentUserDep, nix: NixDep, db: DBDep):
     db.remove_store(store.id)
 
 
+@store_router.get("", status_code=200, response_model=list[UserStore])
+def get_store_list(user: CurrentUserDep, db: DBDep):
+    stores = db.get_user_stores(user.username)
+    return stores
+
+
 @store_router.post("/package", status_code=201)
 def add_package_to_store(
     store_name: str, package_name: str, user: CurrentUserDep, nix: NixDep, db: DBDep
@@ -42,6 +48,14 @@ def add_package_to_store(
     store = get_store_for_interactions(store_name, db, user)
 
     nix.add_package_to_store(store.id, package_name)
+
+
+@store_router.get("/package", status_code=200, response_model=list[str])
+def get_package_list(store_name: str, user: CurrentUserDep, nix: NixDep, db: DBDep):
+    store = get_store_for_interactions(store_name, db, user)
+
+    packages = nix.get_store_paths(store.id)
+    return packages
 
 
 @store_router.delete("/package", status_code=204)
