@@ -1,3 +1,4 @@
+from copy import deepcopy
 import streamlit as st
 
 from services.nix_api import NixAPI
@@ -9,11 +10,12 @@ async def diff_stores(api: NixAPI):
     col2.text("")
     col2.text("")
 
-    stores = await api.stores()
+    stores1 = await api.stores()
+    stores2 = deepcopy(stores1)
 
-    store1 = col1.selectbox("Store 1", stores)
+    store1 = col1.selectbox("Store 1", stores1)
     submit_button = col2.button("Submit", use_container_width=True)
-    store2 = col3.selectbox("Store 2", stores)
+    store2 = col3.selectbox("Store 2", stores2)
 
     if submit_button:
         paths = await api.difference_paths(store1, store2)

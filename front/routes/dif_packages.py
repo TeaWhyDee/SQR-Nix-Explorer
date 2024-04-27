@@ -1,3 +1,4 @@
+from copy import deepcopy
 import streamlit as st
 
 from services.nix_api import NixAPI
@@ -9,15 +10,16 @@ async def diff_packages(api: NixAPI):
     col2.text("")
     col2.text("")
 
-    stores = await api.stores()
+    stores1 = await api.stores()
+    stores2 = deepcopy(stores1)
 
-    store1 = col1.selectbox("Store 1", stores)
+    store1 = col1.selectbox("Store 1", stores1)
     submit_button = col2.button("Submit", use_container_width=True)
-    store2 = col3.selectbox("Store 2", stores)
-    
-    packages1 = await api.packages(store=store1)
-    packages2 = await api.packages(store=store2)
-    
+    store2 = col3.selectbox("Store 2", stores2)
+
+    packages1 = await api.packages(store1)
+    packages2 = await api.packages(store2)
+
     package1 = col1.selectbox("Package 1", packages1)
     package2 = col3.selectbox("Package 2", packages2)
 
