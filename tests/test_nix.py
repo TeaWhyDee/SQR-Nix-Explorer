@@ -89,7 +89,6 @@ def test_get_difference_of_paths(NixAPI):
     package_name1 = "nixpkgs#glibc"
     package_name2 = "nixpkgs#busybox"
 
-    # NixAPI.add_store(store_name)
     NixAPI.add_store(store_name2)
 
     NixAPI.add_package_to_store(store_name1, package_name1)
@@ -106,7 +105,6 @@ def test_get_difference_of_package_closures(NixAPI):
     package_name1 = "nixpkgs#glibc"
     package_name2 = "nixpkgs#busybox"
 
-    # NixAPI.add_store(store_name)
     NixAPI.add_store(store_name2)
 
     NixAPI.add_package_to_store(store_name1, package_name1)
