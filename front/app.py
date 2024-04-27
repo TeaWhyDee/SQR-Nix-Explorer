@@ -6,7 +6,10 @@ from routes.search import search
 from routes.stores import stores
 from services.mock_nix_api import MockNixApi
 from services.nix_api import NixAPI
+from services.rest_nix_api import RestNixApi
 from services.st_sess_kv_store import StSessKvStore
+
+from config import api as API
 
 
 async def login(api: NixAPI):
@@ -38,7 +41,11 @@ async def register(api: NixAPI):
 
 
 async def main():
-    api = MockNixApi(StSessKvStore("mock-api-"))
+    api = (
+        MockNixApi(StSessKvStore("mock-api-"))
+        if API == "mock"
+        else RestNixApi(API, StSessKvStore("rest-api-"))
+    )
 
     LOGIN = "Login"
     REGISTER = "Register"
@@ -49,7 +56,6 @@ async def main():
 
     st.sidebar.title("Navigation")
     ili = await api.is_logged_in()
-    ili = True
     page = st.sidebar.radio(
         "Go to", [SEARCH, DIFF_STORES, STORES] if ili else [LOGIN, REGISTER]
     )
