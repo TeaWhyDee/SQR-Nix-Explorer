@@ -1,5 +1,6 @@
 import asyncio
 import streamlit as st
+from routes.dif_packages import diff_packages
 from routes.diff_stores import diff_stores
 from routes.search import search
 from services.mock_nix_api import MockNixApi
@@ -42,6 +43,7 @@ async def main():
     REGISTER = "Register"
     SEARCH = "Search"
     DIFF_STORES = "Diff Stores"
+    DIFF_PACKAGES = "Diff Packages"
 
     st.sidebar.title("Navigation")
     ili = await api.is_logged_in()
@@ -61,6 +63,8 @@ async def main():
         await search(api)
     elif page == DIFF_STORES:
         await diff_stores(api)
+    elif page == DIFF_PACKAGES:
+        await diff_packages(api)
     else:
         st.error("Invalid page!")
 
