@@ -12,6 +12,10 @@ class NixAPI(ABC):
         pass
 
     @abstractmethod
+    async def logout(self):
+        pass
+
+    @abstractmethod
     async def is_logged_in() -> bool:
         pass
 
