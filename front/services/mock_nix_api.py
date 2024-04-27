@@ -45,6 +45,9 @@ class MockNixApi(NixAPI):
             return
         raise ValueError()
 
+    async def logout(self):
+        self._kvstore.set(_LOGGED_KEY, '')
+
     async def is_logged_in(self) -> bool:
         return self._kvstore.get(_LOGGED_KEY) == _LOGGED_KEY
 

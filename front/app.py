@@ -59,6 +59,11 @@ async def main():
     page = st.sidebar.radio(
         "Go to", [SEARCH, DIFF_STORES, STORES] if ili else [LOGIN, REGISTER]
     )
+    logout = st.sidebar.button(label="Logout")
+
+    if logout:
+        await api.logout()
+        st.rerun()
 
     if page == LOGIN:
         logged_in = await login(api)
