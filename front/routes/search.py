@@ -20,7 +20,7 @@ async def search(api: NixAPI):
             col1.write(f"**Name:** {package}")
             col1.write(f"**Closure Size:** {closure_size} packages")
 
-            if col2.button("Delete"):
+            if col2.button("Delete", key=package):
                 try:
                     await api.rm_package(store, package)
                     st.rerun()
