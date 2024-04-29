@@ -16,7 +16,7 @@ async def stores(api: NixAPI):
 
             col1.write(f"**{store}**")
 
-            if col2.button(f"Delete {store}"):
+            if col2.button("Delete"):
                 try:
                     await api.rm_store(store)
                     st.rerun()
