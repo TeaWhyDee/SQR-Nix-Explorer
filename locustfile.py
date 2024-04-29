@@ -1,16 +1,14 @@
-import os
-import random
-
 from locust import HttpUser, task, between
 
-username = ""  # os.environ['PERFTEST_USERNAME']
-password = ""  # os.environ['PERFTEST_PASSWORD']
+username = "perftester"
+password = "S0M3pwd"
 
 
 class User(HttpUser):
-    wait_time = between(0.1, 0.1)
+    wait_time = between(0.05, 0.1)
 
     def on_start(self):
+        self.client.post("/auth/register", json={"username": username, "password": password})
         request = self.client.post("/auth/token",
                                    data={
                                        "username": username,
@@ -21,7 +19,7 @@ class User(HttpUser):
 
     @task
     def default_route(self):
-        print(self.client.post("/store",
-                         params={"store_name": "test_store"}).headers)
-        print(self.client.delete("/store",
-                           params={"store_name": "test_store"}).headers)
+        self.client.post("/store",
+                         params={"store_name": "teststore"})
+        self.client.delete("/store",
+                           params={"store_name": "teststore"})
