@@ -38,11 +38,11 @@ class RestNixApi(NixAPI):
         return "Authorization" in self.client.headers
 
     async def add_store(self, name: str):
-        response = await self.client.post(f"/store?store_name={name}")
+        response = await self.client.post("/store", params={"store_name": name})
         response.raise_for_status()
 
     async def rm_store(self, name: str):
-        response = await self.client.delete(f"/store?store_name={name}")
+        response = await self.client.delete("/store", params={"store_name": name})
         response.raise_for_status()
 
     async def stores(self) -> List[str]:
@@ -50,33 +50,35 @@ class RestNixApi(NixAPI):
         response.raise_for_status()
         return map(lambda s: s["name"], response.json())
 
-    async def add_package(self, store: str, name: str):
+    async def add_package(self, store: str, package: str):
         response = await self.client.post(
-            f"/store/package?store_name={store}&package_name={name}"
+            "/store/package", params={"store_name": store, "package_name": package}
         )
         response.raise_for_status()
 
     async def rm_package(self, store: str, package: str):
         response = await self.client.delete(
-            f"/store/package?store_name={store}&package_name={package}"
+            "/store/package", params={"store_name": store, "package_name": package}
         )
         response.raise_for_status()
 
     async def packages(self, store: str) -> List[str]:
-        response = await self.client.get(f"/store/package?store_name={store}")
+        response = await self.client.get("/store/package", params={"store_name": store})
         response.raise_for_status()
         return response.json()
 
     async def closure_size(self, store: str, package: str) -> int:
         response = await self.client.get(
-            f"/store/get_package_closure_size?store_name={store}&package={package}",
+            "/store/get_package_closure_size",
+            params={"store_name": store, "package": package},
         )
         response.raise_for_status()
         return response.json()
 
     async def difference_paths(self, store1: str, store2: str) -> List[str]:
         response = await self.client.get(
-            f"/store/get_difference_paths?store_name1={store1}&store_name2={store2}",
+            "/store/get_difference_paths",
+            params={"store_name1": store1, "store_name2": store2},
         )
         response.raise_for_status()
         return response.json()
@@ -85,7 +87,13 @@ class RestNixApi(NixAPI):
         self, store1: str, package1: str, store2: str, package2: str
     ) -> List[str]:
         response = await self.client.get(
-            f"/store/get_difference_package_closures?store_name1={store1}&package1={package1}&store_name2={store2}&package2={package2}",
+            "/store/get_difference_package_closures",
+            params={
+                "store_name1": store1,
+                "package1": package1,
+                "store_name2": store2,
+                "package2": package2,
+            },
         )
         response.raise_for_status()
         return response.json()
