@@ -35,5 +35,5 @@ jobs:
       - name: Run the application
         run: poetry run uvicorn back.main:get_app --host 0.0.0.0 --port 80 &
       - name: Run performance test
-        run: locust -H http://127.0.0.1:80 -u 1 -t 1m --headless User
+        run: poetry run locust -H http://127.0.0.1:80 -u 1 -t 1m --headless User
 
