@@ -1,4 +1,5 @@
 import asyncio
+import os
 import streamlit as st
 from routes.dif_packages import diff_packages
 from routes.diff_stores import diff_stores
@@ -9,7 +10,8 @@ from services.nix_api import NixAPI
 from services.rest_nix_api import RestNixApi
 from services.st_sess_kv_store import StSessKvStore
 
-from config import api as API
+
+API = os.environ["NIX_EXPLORER_API"]  # mock or a url like https://sqr.teawide.xyz/
 
 
 async def login(api: NixAPI):
